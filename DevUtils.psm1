@@ -39,13 +39,14 @@ function Clear-VSSolutionFolder
     }
 }
 
+# set up
+pushd 'c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC'
+cmd /c "vcvarsall.bat&set" |
+foreach {
+  if ($_ -match "=") {
+    $v = $_.split("="); set-item -force -path "ENV:\$($v[0])"  -value "$($v[1])"
+  }
+}
+popd
 
-# "Removing bin and obj folders from $pwd"
-
-# if (not (Test-Path *.sln))
-# {
-#     ""
-
-# }
-# ls -LiteralPath obj -Recurse | % { $_.Parent.FullName + "\" + $_.Name } | rmdir -force -recurse
-# ls -LiteralPath bin -Recurse | % { $_.Parent.FullName + "\" + $_.Name } | rmdir -force -recurse
+Write-Host "VS dev environment loaded"
